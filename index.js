@@ -35,6 +35,18 @@ server.get('/api/actions/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: "The action with this ID not be retrieved. "}))
 })
 
+server.post('/api/actions',  (req, res) => {
+    const { project_id, description, notes } = req.body;
+    const newAction = { project_id, description, notes };
+    actionDb.insert(newAction)
+      .then( newAct => {
+          console.log('\n--- Success ---', newAct);
+          res.status(201).json(newAct);
+      })
+      .catch(err => res.status(500).json({ error: "This action could not be added. "}))
+    })
+    
+
 
 
 
@@ -58,6 +70,18 @@ server.get('/api/projects/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: "The project with this ID not be retrieved. "}))
 })
 
+server.post('/api/projects', (req, res) => {
+    const { name, description } = req.body;
+    const newAction = { name, description };
+    projectDb.insert(newAction)
+      .then( newProject => {
+        console.log('\n*** projects ***', newProject);
+        res.status(200).json(newProject);
+      })
+      .catch(err => res.status(500).json({ error: "This project could not be added. "}))
+})
+    
+  
 
 
 
