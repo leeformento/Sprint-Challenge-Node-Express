@@ -1,75 +1,22 @@
 const express = require('express');
-const helmet = require('helmet');
-const morgan = require('morgan');
 
-const actionDb = require('./data/helpers/actionModel');
+const configureMiddleware = require('./config/middleware.js')
 const projectDb = require('./data/helpers/projectModel');
 
 const server = express();
 
-server.use(express.json());
-server.use(helmet()); 
-server.use(morgan('tiny')); 
+const actionRoutes = require('./actions/actionRoutes.js')
+configureMiddleware(server);
+
+
+server.use('/api/actions', actionRoutes);
+
+
 
 server.get('/', (req, res) => {
     res.json('Home');
   });
-  
-// ACTION MODEL CRUD
-server.get('/api/actions', (req, res) => {
-    actionDb.get()
-      .then(actions => {
-        console.log('\n*** actions ***', actions);
-        res.status(200).json(actions);
-      })
-        .catch(err => res.status(500).json({ error: "The actions could not be retrieved. "}))
-    })
 
-server.get('/api/actions/:id', (req, res) => {
-  const { id } = req.params;
-  actionDb.get(id)
-    .then(action=> {
-    console.log('\n*** projects ***', action);
-      res.status(200).json(action);
-    })
-    .catch(err => res.status(500).json({ error: "The action with this ID not be retrieved. "}))
-})
-
-server.post('/api/actions',  (req, res) => {
-    const { project_id, description, notes } = req.body;
-    const newAction = { project_id, description, notes };
-    actionDb.insert(newAction)
-      .then( newAct => {
-          res.status(201).json(newAct);
-      })
-      .catch(err => res.status(500).json({ error: "This action could not be added. "}))
-    })
-    
-server.delete('/api/actions/:id', (req, res) => {
-  const { id } = req.params;
-  actionDb.remove(id)
-    .then(actionRemoved => {
-        res.status(200).json(actionRemoved);
-    })
-    .catch(err => { res.status(500).json({ error: "This action could not be deleted."});
-      });
-  })
-
-server.put('/api/actions/:id', (req, res) => {
-  const { id } = req.params;
-  const { project_id, description, notes } = req.body;
-  const editAction = { project_id, description, notes }
-  actionDb.update(id, editAction)
-    .then(action => {
-      console.log('\n***edit function ****', action);
-      actionDb
-        .get(id)
-        .then(action => {
-          res.status(200).json(action);
-        });
-    })
-    .catch(err => res.status(500).json({ error: "The action could not be modified." }));
-})
 
 
 // PROJECT MODEL CRUD
