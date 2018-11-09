@@ -13,6 +13,14 @@ router.get('/', (req, res) => {
       .catch(err => res.status(500).json({ error: "The projects could not be retrieved. "}))
     })
 
+router.get('/projectActions/:id', (req, res) => {
+  projectDb.getProjectActions(req.params.id)
+    .then(actions => {
+      res.status(200).json(actions);
+    })
+    .catch(err => res.status(500).json({ error: "The projects could not be retrieved. "}))
+})
+
 router.get('/:id', (req, res) => {
     const { id } = req.params;
     projectDb.get(id)

@@ -39,7 +39,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <h2>Projects</h2>
       <Projects projects={this.state.projects} />
+      <h2>Actions</h2>
       <Actions actions={this.state.actions} />
       </div>
     );
