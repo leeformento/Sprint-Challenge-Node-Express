@@ -40,13 +40,20 @@ server.post('/api/actions',  (req, res) => {
     const newAction = { project_id, description, notes };
     actionDb.insert(newAction)
       .then( newAct => {
-          console.log('\n--- Success ---', newAct);
           res.status(201).json(newAct);
       })
       .catch(err => res.status(500).json({ error: "This action could not be added. "}))
     })
     
-
+server.delete('/api/actions/:id', (req, res) => {
+  const { id } = req.params;
+  actionDb.remove(id)
+    .then(actionRemoved => {
+        res.status(200).json(actionRemoved );
+    })
+    .catch(err => { res.status(500).json({ error: "This action could not be deleted."});
+      });
+  })
 
 
 
@@ -81,6 +88,15 @@ server.post('/api/projects', (req, res) => {
       .catch(err => res.status(500).json({ error: "This project could not be added. "}))
 })
     
+server.delete('/api/projects/:id', (req, res) => {
+    const { id } = req.params;
+    projectDb.remove(id)
+      .then(projectRemoved => {
+        res.status(200).json(projectRemoved);
+      })
+      .catch(err => { res.status(500).json({ error: "This user could not be deleted."});
+      });
+  })
   
 
 
