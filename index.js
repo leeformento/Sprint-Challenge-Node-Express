@@ -49,12 +49,27 @@ server.delete('/api/actions/:id', (req, res) => {
   const { id } = req.params;
   actionDb.remove(id)
     .then(actionRemoved => {
-        res.status(200).json(actionRemoved );
+        res.status(200).json(actionRemoved);
     })
     .catch(err => { res.status(500).json({ error: "This action could not be deleted."});
       });
   })
 
+server.put('/api/actions/:id', (req, res) => {
+  const { id } = req.params;
+  const { project_id, description, notes } = req.body;
+  const editAction = { project_id, description, notes }
+  actionDb.update(id, editAction)
+    .then(action => {
+      console.log('\n***edit function ****', action);
+      actionDb
+        .get(id)
+        .then(action => {
+          res.status(200).json(action);
+        });
+    })
+    .catch(err => res.status(500).json({ error: "The action could not be modified." }));
+})
 
 
 // PROJECT MODEL CRUD
@@ -94,10 +109,25 @@ server.delete('/api/projects/:id', (req, res) => {
       .then(projectRemoved => {
         res.status(200).json(projectRemoved);
       })
-      .catch(err => { res.status(500).json({ error: "This user could not be deleted."});
+      .catch(err => { res.status(500).json({ error: "This project could not be deleted."});
       });
   })
   
+  server.put('/api/projects/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const editProject = { name, description }
+    projectDb.update(id, editProject)
+      .then(projectEdit => {
+        console.log('\*** project edit****', editProject);
+        projectEdit
+          .get(id)
+          .then(project => {
+            res.status(200).json(project)
+          });
+      })
+      .catch(err => res.status(500).json({ error: "The project information could not be modified." }));
+})
 
 
 
