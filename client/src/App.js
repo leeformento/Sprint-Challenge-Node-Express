@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import Projects from './Projects'
+import Actions from './Actions'
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      projects: []
+      projects: [],
+      actions: []
     }
   }
   componentDidMount() {
@@ -20,13 +22,25 @@ class App extends Component {
     .catch(error => {
       console.log(error);
     })
+    axios
+    .get('http://localhost:7290/api/actions')
+    .then(response => {
+      this.setState({
+        actions: response.data
+      })
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+    
   }
 
   render() {
     return (
       <div className="App">
       <Projects projects={this.state.projects} />
-
+      <Actions actions={this.state.actions} />
       </div>
     );
   }

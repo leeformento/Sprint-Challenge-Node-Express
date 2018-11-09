@@ -7,7 +7,7 @@ import React from 'react'
                 return (
                     <div key={project.id}>
                         <p>Name: {project.name}</p>
-                        {/* <p>Descr: {project.description}</p> */}
+                        <p>Description: {project.description}</p>
 
                     </div>
                 )
